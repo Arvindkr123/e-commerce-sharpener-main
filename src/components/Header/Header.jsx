@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import HeaderCartButton from "../HeaderCartButton/HeaderCartButton";
 
-const Header = ({ onClick }) => {
+const Header = ({ showCartHandler }) => {
   return (
     <Navbar expand="lg" bg="dark" data-bs-theme={"dark"}>
       <Container>
@@ -12,9 +13,7 @@ const Header = ({ onClick }) => {
           <Nav.Link href="#About">About</Nav.Link>
         </Nav>
         <Nav className="justify-content-end">
-          <Button variant="outline-primary" onClick={onClick}>
-            Cart
-          </Button>
+          <HeaderCartButton showCartHandler={showCartHandler} />
         </Nav>
       </Container>
     </Navbar>
