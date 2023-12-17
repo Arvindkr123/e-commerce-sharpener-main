@@ -5,6 +5,7 @@ import ProductList from "./products/ProductList";
 import Cart from "./components/cart/Cart";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./pages/About";
+import Home from "./pages/Home";
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
       {cartShown && <Cart hideCartHandler={hideCartHandler} />}
       <Header showCartHandler={showCartHandler} />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/store" element={<ProductList />} />
         <Route path="/about" element={<About />} />
       </Routes>
