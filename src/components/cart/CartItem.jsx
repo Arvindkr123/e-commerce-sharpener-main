@@ -4,7 +4,7 @@ const CartItem = ({ title, id, price, amount, onAdd, onRemove }) => {
   return (
     <li className={classes["cart-item"]}>
       <div>
-        <h2>{title}</h2>
+        <h4>{title}</h4>
         <div className={classes.summary}>
           <span className={classes.price}>{price}</span>
           <span className={classes.amount}>x {amount}</span>

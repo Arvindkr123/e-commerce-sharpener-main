@@ -10,8 +10,12 @@ const Cart = ({ hideCartHandler }) => {
   const totalAmount = ctx.totalAmount.toFixed(2);
   const hastItem = ctx.products.length > 0;
 
-  const cartItemRemoveHandler = (id) => {};
-  const cartItemAddHandler = (product) => {};
+  const cartItemRemoveHandler = (id) => {
+    ctx.removeItem(id);
+  };
+  const cartItemAddHandler = (product) => {
+    ctx.addItem({ ...product, amount: 1 });
+  };
 
   // cart elements
   const cartElements = (

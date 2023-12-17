@@ -5,6 +5,8 @@ import ProductList from "./products/ProductList";
 import Cart from "./components/cart/Cart";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./pages/About";
+
+
 const App = () => {
   const [cartShown, setCartShown] = useState(false);
   const showCartHandler = () => {
