@@ -4,9 +4,12 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import HeaderCartButton from "../HeaderCartButton/HeaderCartButton";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { useAuthContext } from "../../store/AuthContext";
 
 const Header = ({ showCartHandler }) => {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuthContext();
 
   return (
     <Navbar expand="lg" bg="dark" data-bs-theme={"dark"}>
@@ -19,11 +22,17 @@ const Header = ({ showCartHandler }) => {
             <Nav.Link onClick={() => navigate("/store")}>Store</Nav.Link>
             <Nav.Link onClick={() => navigate("/about")}>About</Nav.Link>
             <Nav.Link onClick={() => navigate("/contact")}>Contact Us</Nav.Link>
-            <Nav.Link onClick={() => navigate("/auth")}>Login</Nav.Link>
+            {isLoggedIn ? (
+              <Button onClick={logout}>LogOut</Button>
+            ) : (
+              <Nav.Link onClick={() => navigate("/auth")}>Login</Nav.Link>
+            )}
           </Nav>
-          <Nav className="justify-content-end">
-            <HeaderCartButton showCartHandler={showCartHandler} />
-          </Nav>
+          {isLoggedIn && (
+            <Nav className="justify-content-end">
+              <HeaderCartButton showCartHandler={showCartHandler} />
+            </Nav>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
