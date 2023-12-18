@@ -19,6 +19,7 @@ const Header = ({ showCartHandler }) => {
             <Nav.Link onClick={() => navigate("/store")}>Store</Nav.Link>
             <Nav.Link onClick={() => navigate("/about")}>About</Nav.Link>
             <Nav.Link onClick={() => navigate("/contact")}>Contact Us</Nav.Link>
+            <Nav.Link onClick={() => navigate("/auth")}>Login</Nav.Link>
           </Nav>
           <Nav className="justify-content-end">
             <HeaderCartButton showCartHandler={showCartHandler} />
