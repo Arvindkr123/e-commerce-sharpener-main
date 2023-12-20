@@ -1,5 +1,7 @@
-import { useContext, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import CartContext from "./CartContext";
+import { useAuthContext } from "./AuthContext";
+import config from "../config/config";
 
 let defaultCartState = {
   products: [],
@@ -8,27 +10,16 @@ let defaultCartState = {
 
 const cardReducer = (state, action) => {
   if (action.type === "ADD") {
-    const existingCartItemIndex = state.products.findIndex(
-      (product) => product.id === action.payload.id
-    );
-    const existingCartItem = state.products[existingCartItemIndex];
-    let updatedProducts;
-    if (existingCartItem) {
-      // create new obj to assign the values
-      let updatedProduct = {
-        ...existingCartItem,
-        amount: existingCartItem.amount + action.payload.amount,
-      };
-      updatedProducts = [...state.products];
-      updatedProducts[existingCartItemIndex] = updatedProduct;
-    } else {
-      updatedProducts = state.products.concat(action.payload);
-    }
-    const updatedAmount =
-      state.totalAmount + action.payload.price * action.payload.amount;
+    //console.log(action);
     return {
-      products: updatedProducts,
-      totalAmount: updatedAmount,
+      products: action.products,
+      totalAmount: action.totalAmount,
+    };
+  }
+  if (action.type === "CLEAR") {
+    return {
+      products: action.products,
+      totalAmount: action.totalAmount,
     };
   }
 
@@ -62,13 +53,74 @@ const cardReducer = (state, action) => {
 
 export const CartProvider = ({ children }) => {
   const [cartSlice, dispatch] = useReducer(cardReducer, defaultCartState);
+  const { email } = useAuthContext();
+  const emailForCrud = email.replace("@", "").replace(".", "");
 
-  const addItemHandler = (item) => {
-    dispatch({ type: "ADD", payload: item });
+  useEffect(() => {
+    const setDefaultValue = async () => {
+      try {
+        const res = await fetch(`${config.dbKey}/cart/${emailForCrud}.json`);
+        const data = await res.json();
+        dispatch({
+          type: "ADD",
+          payload: data?.products || [],
+          totalAmount: data?.totalAmount || 0,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (emailForCrud) {
+      setDefaultValue();
+    }
+  }, [emailForCrud]);
+
+  const addItemHandler = async (item) => {
+    //console.log(item);
+    const updatedAmount = cartSlice.totalAmount + item.price * item.amount;
+
+    // find the index of that item
+    const existingCartItemIndex = cartSlice.products.findIndex(
+      (ele) => ele.id === item.id
+    );
+    let existingCartItem = cartSlice.products[existingCartItemIndex];
+
+    let updatedProducts;
+    if (existingCartItem) {
+      let updatedProduct = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + item.amount,
+      };
+      updatedProducts = [...cartSlice.products];
+      updatedProducts[existingCartItemIndex] = updatedProduct;
+    } else {
+      updatedProducts = cartSlice.products.concat(item);
+    }
+    dispatch({
+      type: "ADD",
+      products: updatedProducts,
+      totalAmount: updatedAmount,
+    });
+
+    try {
+      await fetch(`${config.dbKey}/cart/${emailForCrud}.json`, {
+        method: "PUT",
+        body: JSON.stringify({
+          products: updatedProducts,
+          totalAmount: updatedAmount,
+        }),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const removeItemHandler = (id) => {
     dispatch({ type: "REMOVE", payload: id });
+  };
+
+  const clearCartHandler = () => {
+    dispatch({ type: "CLEAR", products: [], totalAmount: 0 });
   };
 
   const cartContextValue = {
@@ -76,6 +128,7 @@ export const CartProvider = ({ children }) => {
     totalAmount: cartSlice.totalAmount,
     addItem: addItemHandler,
     removeItem: removeItemHandler,
+    clearCart: clearCartHandler,
   };
 
   return (

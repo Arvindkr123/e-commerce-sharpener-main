@@ -5,9 +5,9 @@ import { useCartContext } from "../store/CartProvider";
 
 const ProductList = () => {
   const { addItem } = useCartContext();
-  const addtoCart = (item) => {
+  const addtoCart = async(item) => {
     // console.log(item);
-    addItem({ amount: 1, ...item });
+    await addItem({ amount: 1, ...item });
   };
   return (
     <Container>

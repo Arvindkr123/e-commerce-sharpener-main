@@ -13,8 +13,8 @@ const Cart = ({ hideCartHandler }) => {
   const cartItemRemoveHandler = (id) => {
     ctx.removeItem(id);
   };
-  const cartItemAddHandler = (product) => {
-    ctx.addItem({ ...product, amount: 1 });
+  const cartItemAddHandler = async (product) => {
+    await ctx.addItem({ ...product, amount: 1 });
   };
 
   // cart elements

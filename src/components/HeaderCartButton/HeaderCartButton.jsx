@@ -4,7 +4,7 @@ import classes from "./headerCart.module.css";
 import { useCartContext } from "../../store/CartProvider";
 const HeaderCartButton = ({ showCartHandler }) => {
   const { products } = useCartContext();
-  const numberOfItemsInCarts = products.reduce(
+  const numberOfItemsInCarts = products?.reduce(
     (acc, cur) => acc + cur.amount,
     0
   );
