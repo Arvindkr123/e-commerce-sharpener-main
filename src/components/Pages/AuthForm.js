@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import AuthContext from "../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import CartContext from "../store/CartContext";
+import config from "../../config/config";
 
 const AuthForm = () => {
   const emailRef = useRef();
@@ -28,8 +29,7 @@ const AuthForm = () => {
     setError(null);
     let url;
     if (hasAccount) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBKXBlY_x7fR9fr1yNqArjEAAmon0uKTvQ";
+      url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${config.apiKey}`;
       fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -64,8 +64,7 @@ const AuthForm = () => {
       emailRef.current.value = "";
       passwordRef.current.value = "";
     } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBKXBlY_x7fR9fr1yNqArjEAAmon0uKTvQ";
+      url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${config.apiKey}`;
       fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -111,16 +110,13 @@ const AuthForm = () => {
         .then((res) => console.log(res))
         .catch((err) => console.log(err));
 
-      fetch(
-        `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`,
-        {
-          method: "POST",
-          body: JSON.stringify(cart),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      fetch(`${config.dbKey}/cart/${emailForCrud}.json`, {
+        method: "POST",
+        body: JSON.stringify(cart),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then((res) => console.log(res))
         .catch((err) => console.log(err));
 

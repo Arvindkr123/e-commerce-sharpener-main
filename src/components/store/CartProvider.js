@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import CartContext from "./CartContext";
 import { useReducer } from "react";
 import AuthContext from "./AuthContext";
+import config from "../../config/config";
 
 let defaultCartState = {
   products: [],
@@ -57,9 +58,7 @@ const CartProvider = (props) => {
 
   useEffect(() => {
     const setDefaultValue = async () => {
-      await fetch(
-        `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`
-      )
+      await fetch(`${config.dbKey}/cart/${emailForCrud}.json`)
         .then((res) => {
           return res.json();
         })
@@ -102,16 +101,13 @@ const CartProvider = (props) => {
       products: updatedItems,
       totalAmount: updatedAmount,
     });
-    await fetch(
-      `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          products: updatedItems,
-          totalAmount: updatedAmount,
-        }),
-      }
-    )
+    await fetch(`${config.dbKey}/cart/${emailForCrud}.json`, {
+      method: "PUT",
+      body: JSON.stringify({
+        products: updatedItems,
+        totalAmount: updatedAmount,
+      }),
+    })
       .then((res) => {
         return res.json();
       })

@@ -9,8 +9,8 @@ import {
 } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header/Header";
-import ProductList from "./Products/ProductList";
 import Cart from "./components/Cart/Cart";
+import ProductList from "./products/ProductList.js";
 import { useContext, useState } from "react";
 import CartProvider from "./components/store/CartProvider";
 import About from "./components/Pages/About";
